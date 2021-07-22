@@ -182,6 +182,7 @@ export type ValuedNotifyInfo = NotifyInfo & {
 };
 
 export interface Callbacks<Values = any> {
+  onValidateFinish?: () => void;
   onValuesChange?: (changedValues: any, values: Values) => void;
   onFieldsChange?: (changedFields: FieldData[], allFields: FieldData[]) => void;
   onFinish?: (values: Values) => void;

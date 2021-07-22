@@ -30,6 +30,7 @@ export interface FormProps<Values = any> extends BaseFormProps {
   onFieldsChange?: Callbacks<Values>['onFieldsChange'];
   onFinish?: Callbacks<Values>['onFinish'];
   onFinishFailed?: Callbacks<Values>['onFinishFailed'];
+  onValidateFinish?: () => void;
   validateTrigger?: string | string[] | false;
   preserve?: boolean;
 }
@@ -49,6 +50,7 @@ const Form: React.ForwardRefRenderFunction<FormInstance, FormProps> = (
     onFieldsChange,
     onFinish,
     onFinishFailed,
+    onValidateFinish,
     ...restProps
   }: FormProps,
   ref,
@@ -83,6 +85,7 @@ const Form: React.ForwardRefRenderFunction<FormInstance, FormProps> = (
     ...validateMessages,
   });
   setCallbacks({
+    onValidateFinish,
     onValuesChange,
     onFieldsChange: (changedFields: FieldData[], ...rest) => {
       formContext.triggerFormChange(name, changedFields);

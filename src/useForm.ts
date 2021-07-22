@@ -736,6 +736,8 @@ export class FormStore {
   ) => {
     this.warningUnhooked();
 
+    const { onValidateFinish } = this.callbacks;
+
     const provideNameList = !!nameList;
     const namePathList: InternalNamePath[] | undefined = provideNameList
       ? nameList.map(getNamePath)
@@ -826,6 +828,7 @@ export class FormStore {
         this.notifyObservers(this.store, resultNamePathList, {
           type: 'validateFinish',
         });
+        onValidateFinish?.();
         this.triggerOnFieldsChange(resultNamePathList, results);
       });
 
