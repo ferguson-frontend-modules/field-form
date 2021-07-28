@@ -128,6 +128,7 @@ export interface RuleError {
 export interface ValidateOptions {
   triggerName?: string;
   validateMessages?: ValidateMessages;
+  silence?: boolean;
   /**
    * Recursive validate. It will validate all the name path that contains the provided one.
    * e.g. ['a'] will validate ['a'] , ['a', 'b'] and ['a', 1].
@@ -230,6 +231,7 @@ export interface FormInstance<Values = any> {
   setFields: (fields: FieldData[]) => void;
   setFieldsValue: (value: RecursivePartial<Values>) => void;
   validateFields: ValidateFields<Values>;
+  validateFieldsSilently: ValidateFields<Values>;
 
   // New API
   submit: () => void;

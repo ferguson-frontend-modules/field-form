@@ -91,6 +91,7 @@ export class FormStore {
     setFields: this.setFields,
     setFieldsValue: this.setFieldsValue,
     validateFields: this.validateFields,
+    validateFieldsSilently: this.validateFieldsSilently,
     submit: this.submit,
 
     getInternalHooks: this.getInternalHooks,
@@ -828,7 +829,9 @@ export class FormStore {
         this.notifyObservers(this.store, resultNamePathList, {
           type: 'validateFinish',
         });
-        onValidateFinish?.();
+        if (!options?.silence) {
+          onValidateFinish?.();
+        }
         this.triggerOnFieldsChange(resultNamePathList, results);
       });
 
@@ -852,6 +855,14 @@ export class FormStore {
     returnPromise.catch<ValidateErrorEntity>(e => e);
 
     return returnPromise as Promise<Store>;
+  };
+
+  private validateFieldsSilently: InternalValidateFields = (
+    nameList?: NamePath[],
+    options?: ValidateOptions,
+  ) => {
+    const mergedOptions = { ...options, silence: true };
+    return this.validateFields(nameList, mergedOptions);
   };
 
   // ============================ Submit ============================

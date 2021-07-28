@@ -348,6 +348,8 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
     const namePath = this.getNamePath();
     const currentValue = this.getValue();
 
+    const silence = options?.silence;
+
     // Force change to async to avoid rule OOD under renderProps field
     const rootPromise = Promise.resolve().then(() => {
       if (!this.mounted) {
@@ -394,26 +396,29 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
                 nextErrors.push(...errors);
               }
             });
+            if (!silence) {
+              this.errors = nextErrors;
+              this.warnings = nextWarnings;
+              this.triggerMetaEvent();
 
-            this.errors = nextErrors;
-            this.warnings = nextWarnings;
-            this.triggerMetaEvent();
-
-            this.reRender();
+              this.reRender();
+            }
           }
         });
 
       return promise;
     });
 
-    this.validatePromise = rootPromise;
-    this.dirty = true;
-    this.errors = EMPTY_ERRORS;
-    this.warnings = EMPTY_ERRORS;
-    this.triggerMetaEvent();
+    if (!silence) {
+      this.validatePromise = rootPromise;
+      this.dirty = true;
+      this.errors = EMPTY_ERRORS;
+      this.warnings = EMPTY_ERRORS;
+      this.triggerMetaEvent();
 
-    // Force trigger re-render since we need sync renderProps with new meta
-    this.reRender();
+      // Force trigger re-render since we need sync renderProps with new meta
+      this.reRender();
+    }
 
     return rootPromise;
   };
